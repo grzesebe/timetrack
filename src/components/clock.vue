@@ -1,16 +1,18 @@
 <template>
-  <div>
+  <div v-bind:class="{clock: styled}">
     <div>
-        <span>{{ hrs }}</span>
-        <span>hours</span>
+        <span class="time">{{ hrs }}</span>
+        <span v-if="!delimiter">hours</span>
+        <span v-else>{{delimiter}}</span>
     </div>
     <div>
-        <span>{{ mins }}</span>
-        <span>minutes</span>
+        <span class="time">{{ mins }}</span>
+        <span v-if="!delimiter">minutes</span>
+        <span v-else>{{delimiter}}</span>
     </div>
     <div>
-        <span>{{ secs }}</span>
-        <span>second</span>
+        <span class="time">{{ secs }}</span>
+        <span v-if="!delimiter">second</span>
     </div>
   </div>
 </template>
@@ -19,13 +21,33 @@
 export default {
   name: 'Clock',
   props: {
-    hrs: null,
-    mins: null,
-    secs: null
+    hrs: Number,
+    mins: Number,
+    secs: Number,
+    delimiter: String,
+    styled: Boolean
   }
 }
 </script>
 
-<style>
+<style lang="scss">
+  .clock{
+    border-radius: 50%;
+    border: 2px solid black;
+    width: 300px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
 
+    & > div {
+      display: flex;
+      flex-direction: column;
+
+      .time{
+        font-size: 40px;
+      }
+    }
+  }
 </style>

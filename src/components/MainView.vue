@@ -1,55 +1,99 @@
 <template>
 <div>
-  <Clock
-    v-bind:secs="time.seconds"
-    v-bind:mins="time.minutes"
-    v-bind:hrs="time.hours"
-   />
-  <StartStop
-    v-on:start="time.start()"
-    v-on:stop="time.pause()"
-  />
+  <div>
+  {{time.status}}
+    <Clock
+      v-bind:secs="time.work.seconds"
+      v-bind:mins="time.work.minutes"
+      v-bind:hrs="time.work.hours"
+      :styled="true"
+     />
+    <StartStop
+      v-on:start="time.startWork()"
+      v-on:stop="time.takeBreak()"
+      v-on:pause="time.pauseClock()"
+      v-bind:status="time.status"
+    />
+  </div>
+  <div class="tasks">
+    <Tasks v-bind:tasks="time.tasks"/>
+  </div>
 </div>
+
 </template>
 
 <script>
-import Clock from './clock.vue'
+import Clock from './Clock.vue'
 import StartStop from './StartStop.vue'
+import Tasks from './Tasks.vue'
 
-const timeInstance = {
-  allSeconds: 0,
-  get hours () { return ~~(this.allSeconds / (3600)) },
-  get minutes () { return ~~((this.allSeconds % 3600) / 60) },
-  get seconds () { return ~~(this.allSeconds % 3600 % 60) },
-  interval: false,
-  start () {
+class TimeTrack {
+  allSeconds = 0
+  get hours () { return ~~(this.allSeconds / (3600)) }
+  get minutes () { return ~~((this.allSeconds % 3600) / 60) }
+  get seconds () { return ~~(this.allSeconds % 3600 % 60) }
+}
+
+class Task extends TimeTrack {
+  constructor (name, locked) {
+    super()
+    this.name = name
+    this.locked = locked || false
+  }
+}
+
+const time = {
+  work: new TimeTrack(),
+  break: new TimeTrack(),
+  tasks: [new Task('Other', true), new Task('Otasdasdher', true)],
+  currentTask: 0,
+  status: 'pause',
+  interval: null,
+  startInterval: function () {
     this.interval = this.interval || setInterval(() => {
-      this.allSeconds++
+      console.log(this.status)
+      if (this.status === 'work') {
+        this.work.allSeconds++
+        this.tasks[this.currentTask].allSeconds++
+      } else if (this.status === 'break') {
+        this.break.allSeconds++
+      } else {
+
+      }
     }, 1000)
   },
-  pause () {
-    clearInterval(this.interval)
-    this.interval = null
+  startWork () {
+    this.status = 'work'
+  },
+  takeBreak () {
+    this.status = 'break'
+  },
+  pauseClock () {
+    this.status = 'pause'
   }
 }
 
 export default {
   name: 'MainView',
-  data: () => {
+  data: function () {
     return {
-      time: timeInstance
+      time: time
     }
   },
   components: {
     Clock,
-    StartStop
+    StartStop,
+    Tasks
+  },
+  created: function () {
+    time.startInterval()
   }
 }
 
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
+<style lang="scss">
+
 h3 {
   margin: 40px 0 0;
 }
@@ -58,10 +102,12 @@ ul {
   padding: 0;
 }
 li {
-  display: inline-block;
   margin: 0 10px;
 }
 a {
   color: #42b983;
+}
+.tasks{
+  max-width: 300px;
 }
 </style>
