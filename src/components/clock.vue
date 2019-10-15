@@ -14,6 +14,7 @@
         <span class="time">{{ secs }}</span>
         <span v-if="!delimiter">second</span>
     </div>
+    <div ref="anim" class="anim" v-bind:class="status"></div>
   </div>
 </template>
 
@@ -25,22 +26,35 @@ export default {
     mins: Number,
     secs: Number,
     delimiter: String,
-    styled: Boolean
+    styled: Boolean,
+    status: String
   }
 }
 </script>
 
 <style lang="scss">
   .clock{
+    margin: 20px 0;
     border-radius: 50%;
-    border: 2px solid black;
+    border: 3px solid black;
     width: 300px;
     height: 300px;
     display: flex;
     flex-direction: column;
     align-content: center;
     justify-content: center;
-
+    position: relative;
+    .anim{
+      position: absolute;
+      border-radius: 50%;
+      border: 0px solid black;
+      height: 100%;
+      width: 100%;
+      pointer-events: none;
+      &.work{
+        animation: pulse 1s linear infinite;
+      }
+    }
     & > div {
       display: flex;
       flex-direction: column;
@@ -48,6 +62,24 @@ export default {
       .time{
         font-size: 40px;
       }
+    }
+  }
+  @keyframes pulse {
+    0%{
+      transform: scale(1);
+    }
+    50%{
+      transform: scale(1.1);
+      border-width: 5px;
+      border-color: transparent;
+    }
+    75%{
+      border-color: transparent;
+      transform: scale(1);
+    }
+    80%{
+      border-width: 0px;
+      border-color: initial;
     }
   }
 </style>

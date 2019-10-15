@@ -3,10 +3,11 @@
   <div>
   {{time.status}}
     <Clock
-      v-bind:secs="time.work.seconds"
-      v-bind:mins="time.work.minutes"
-      v-bind:hrs="time.work.hours"
+      :secs="time.work.seconds"
+      :mins="time.work.minutes"
+      :hrs="time.work.hours"
       :styled="true"
+      :status="time.status"
      />
     <StartStop
       v-on:start="time.startWork()"
@@ -51,7 +52,6 @@ const time = {
   interval: null,
   startInterval: function () {
     this.interval = this.interval || setInterval(() => {
-      console.log(this.status)
       if (this.status === 'work') {
         this.work.allSeconds++
         this.tasks[this.currentTask].allSeconds++
