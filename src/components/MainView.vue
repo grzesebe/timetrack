@@ -17,7 +17,10 @@
     />
   </div>
   <div class="tasks">
-    <Tasks v-bind:tasks="time.tasks"/>
+    <Tasks
+      :tasks="time.tasks"
+      v-model="time.currentTask"
+    />
   </div>
 </div>
 
@@ -100,9 +103,6 @@ h3 {
 ul {
   list-style-type: none;
   padding: 0;
-}
-li {
-  margin: 0 10px;
 }
 a {
   color: #42b983;

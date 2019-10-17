@@ -9,7 +9,6 @@
 <script>
 export default {
   name: 'StartStop',
-  data: () => { return { e: 'e' } },
   props: {
     status: String
   },

@@ -1,6 +1,7 @@
 <template>
     <ul>
         <li v-for="(task, id) in tasks" v-bind:key="id">
+          <div class="name">
             <span
               v-if="(currentlyEditing != id)"
               key="0"
@@ -14,12 +15,19 @@
               v-on:change="stopEditing()"
               v-on:focusout="stopEditing()"
             >
-            <Clock class="miniclock"
-              v-bind:secs="task.seconds"
-              v-bind:mins="task.minutes"
-              v-bind:hrs="task.hours"
-              delimiter=":"
-            />
+          </div>
+          <Clock class="miniclock"
+            v-bind:secs="task.seconds"
+            v-bind:mins="task.minutes"
+            v-bind:hrs="task.hours"
+            delimiter=":"
+          />
+          <div class="setTask">
+            <input type="radio" name="currentTask" :value="id" :id="id"
+            :checked="currentTask == id ? 'checked' : null"
+             v-on:input="$emit('input', id)"
+             >
+          </div>
         </li>
     </ul>
 </template>
@@ -31,14 +39,16 @@ export default {
   name: 'Tasks',
   props: {
     tasks: Array,
-    currentTaskId: Number
+    value: Number,
+    status: String
   },
   components: {
     Clock
   },
   data: function () {
     return {
-      currentlyEditing: Number
+      currentlyEditing: null,
+      currentTask: this.value
     }
   },
   methods: {
@@ -60,11 +70,18 @@ export default {
 </script>
 
 <style lang="scss">
+@import './../colors.scss';
   .miniclock > div{
     display: inline;
   }
   li{
     display: flex;
     justify-content: space-between;
+    border-bottom: 1px solid $color-text;
+    margin-bottom: 1em;
+    div.name{
+      text-align: left;
+      flex-grow: 1;
+    }
   }
 </style>>
