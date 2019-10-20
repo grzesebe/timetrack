@@ -84,4 +84,7 @@ export default {
       flex-grow: 1;
     }
   }
+  .miniclock{
+    margin: 0 1em;
+  }
 </style>>
